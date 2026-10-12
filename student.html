@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISCAM — Student Portal</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app-data.js"></script>
+  <script src="app.js" defer></script>
+
+</head>
+<body>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ============================================================
+     APP LAYOUT
+     ============================================================ -->
+<div id="app">
+
+  <!-- ======================================================
+       SIDEBAR - STUDENT VERSION
+       ====================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-mark">IS</div>
+      <div class="logo-text">
+        <div class="name">ISCAM</div>
+        <div class="tagline">Student Portal</div>
+      </div>
+    </div>
+
+    <!-- Navigation - Student Specific -->
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" data-page="dashboard">
+          <i class="fas fa-home"></i> Dashboard
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Academics</div>
+        <div class="nav-item" data-page="timetable">
+          <i class="fas fa-calendar-alt"></i> Timetable
+        </div>
+        <div class="nav-item" data-page="results">
+          <i class="fas fa-star-half-alt"></i> Results & Grades
+        </div>
+        <div class="nav-item" data-page="attendance">
+          <i class="fas fa-clipboard-check"></i> My Attendance
+        </div>
+        <div class="nav-item" data-page="transcript">
+          <i class="fas fa-scroll"></i> Transcript
+        </div>
+        <div class="nav-item" data-page="feedback">
+          <i class="fas fa-comments"></i> Feedback & Evaluation
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Finance</div>
+        <div class="nav-item" data-page="fees">
+          <i class="fas fa-money-check-alt"></i> Fees & Payments
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Communication</div>
+        <div class="nav-item" data-page="announcements">
+          <i class="fas fa-bullhorn"></i> Announcements
+        </div>
+        <div class="nav-item" data-page="support">
+          <i class="fas fa-headset"></i> Support/Helpdesk
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Reports</div>
+        <div class="nav-item" data-page="reports">
+          <i class="fas fa-chart-line"></i> My Progress & Analytics
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Profile</div>
+        <div class="nav-item" data-page="profile">
+          <i class="fas fa-user"></i> My Profile
+        </div>
+        <div class="nav-item" data-page="settings">
+          <i class="fas fa-cog"></i> Settings
+        </div>
+      </div>
+    </nav>
+
+    <!-- Student User -->
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-mini-avatar">RM</div>
+        <div class="user-mini-info">
+          <div class="user-mini-name">Razafindrakoto Miora</div>
+          <div class="user-mini-role">STU-2025-001 · L1 Accounting</div>
+        </div>
+        <i class="fas fa-ellipsis-v user-mini-icon"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- Header - Student (Simplified) -->
+    <header class="header">
+      <button class="header-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="header-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search courses, announcements..." />
+      </div>
+      <div class="header-right">
+        <button class="header-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="dot"></span>
+        </button>
+        <div class="header-divider"></div>
+        <div class="header-profile" id="profileBtn">
+          <div class="profile-avatar">RM</div>
+          <div class="profile-info">
+            <span class="profile-name">Miora R.</span>
+            <span class="profile-role">Student</span>
+          </div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profileDropdown"  style="position: fixed;">
+      <div class="dropdown-header">
+        <div class="profile-avatar">RM</div>
+        <div>
+          <div class="profile-name">Razafindrakoto Miora</div>
+          <div class="profile-role">L1 Accounting</div>
+        </div>
+      </div>
+      <div class="dropdown-divider"></div>
+      <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> My Profile</a>
+      <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+      <div class="dropdown-divider"></div>
+      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+
+    <!-- Notification Panel - Student -->
+    <div class="notif-panel" id="notifPanel">
+      <div class="notif-header">
+        <span class="notif-title">Notifications</span>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-item-icon" style="background:rgba(26,58,107,0.12);color:var(--primary);">
+          <i class="fas fa-star"></i>
+        </div>
+        <div>
+          <div class="notif-text">ACCT101 midterm results published</div>
+          <div class="notif-time">2 hours ago</div>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-item-icon" style="background:rgba(220,38,38,0.1);color:var(--danger);">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div>
+          <div class="notif-text">Fee payment due in 3 days (450,000 MGA)</div>
+          <div class="notif-time">Yesterday</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-item-icon" style="background:rgba(22,163,74,0.1);color:var(--success);">
+          <i class="fas fa-calendar"></i>
+        </div>
+        <div>
+          <div class="notif-text">ACCT101 class tomorrow 08:00 Room A1</div>
+          <div class="notif-time">Today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== STUDENT DASHBOARD ==================== -->
+    <div class="page-content active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-subtitle">Welcome back, Miora! Here's your academic overview.</div>
+        </div>
+        <div class="page-actions">
+          <span style="font-size:0.82rem;color:var(--text-muted);"><i class="fas fa-calendar-day"></i> Semester 2, 2024–2025</span>
+        </div>
+      </div>
+
+      <!-- Student Stats -->
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-card-icon"><i class="fas fa-star"></i></div>
+          <div class="stat-card-value">3.42</div>
+          <div class="stat-card-label">Current GPA</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> +0.12 this semester</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-icon"><i class="fas fa-book"></i></div>
+          <div class="stat-card-value">15</div>
+          <div class="stat-card-label">Credits Earned</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> 5 courses</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-card-icon"><i class="fas fa-clipboard-check"></i></div>
+          <div class="stat-card-value">92%</div>
+          <div class="stat-card-label">Attendance</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> Good standing</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-card-icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="stat-card-value">Next: 08:00</div>
+          <div class="stat-card-label">ACCT101</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> Room A1</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-card-icon"><i class="fas fa-money-check-alt"></i></div>
+          <div class="stat-card-value">Paid</div>
+          <div class="stat-card-label">Fees Status</div>
+          <div class="stat-card-change up"><i class="fas fa-check"></i> Current</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="stat-card-value">2</div>
+          <div class="stat-card-label">Alerts</div>
+          <div class="stat-card-change down"><i class="fas fa-arrow-down"></i> Assignment due</div>
+        </div>
+      </div>
+
+
+
+      <!-- =========================================================
+     STUDENT ANNOUNCEMENTS
+     ========================================================= -->
+
+<div class="card" style="margin-top:18px;">
+
+  <div class="card-header">
+
+    <div>
+
+      <div class="card-title">
+        Announcements
+      </div>
+
+      <div class="card-subtitle">
+        Latest announcements from your department
+      </div>
+
+    </div>
+
+    <span
+      class="badge badge-blue"
+    >
+      <i class="fas fa-bullhorn"></i>
+      Department
+    </span>
+
+  </div>
+
+
+  <div class="card-body">
+
+    <div
+      id="studentAnnouncementsContainer"
+      style="
+        display:flex;
+        flex-direction:column;
+      "
+    >
+
+      <div
+        class="text-sm text-muted"
+        style="
+          text-align:center;
+          padding:20px;
+        "
+      >
+        Loading announcements...
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- END STUDENT ANNOUNCEMENTS -->
+
+
+
+
+
+
+
+      <!-- Student Charts -->
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Grade Progress</div>
+            <div class="card-subtitle">Your performance this semester</div>
+          </div>
+          <div class="card-body">
+            <canvas id="studentGradesChart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Attendance</div>
+            <div class="card-subtitle">Monthly attendance rate</div>
+          </div>
+          <div class="card-body">
+            <canvas id="studentAttendanceChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fee Status + Next Classes -->
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Fee Status</div>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+              <div style="padding:14px;background:rgba(22,163,74,0.08);border-radius:var(--radius-sm);text-align:center;">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--success);">1,200,000</div>
+                <div class="text-xs text-muted">Paid (MGA)</div>
+              </div>
+              <div style="padding:14px;background:rgba(220,38,38,0.08);border-radius:var(--radius-sm);text-align:center;">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--danger);">0</div>
+                <div class="text-xs text-muted">Balance Due</div>
+              </div>
+            </div>
+            <div class="progress mb-8"><div class="progress-bar" style="width:100%;background:var(--success);"></div></div>
+            <div class="text-xs text-muted text-center">All fees current ✓</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">This Week's Schedule</div>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--primary);"></div>
+              <div>
+                <div class="activity-text fw-600">Mon 08:00 ACCT101</div>
+                <div class="activity-time">Dr. Rakotomalala · Room A1</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--accent);"></div>
+              <div>
+                <div class="activity-text fw-600">Wed 14:00 MGMT201</div>
+                <div class="activity-time">Prof. Andriamahefa · Room B2</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--success);"></div>
+              <div>
+                <div class="activity-text fw-600">Fri 10:00 ECON101</div>
+                <div class="activity-time">Dr. Razafy · Room A3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Quick Links</div></div>
+        <div class="card-body">
+          <div class="quick-actions">
+            <div class="quick-action" onclick="goto('timetable')">
+              <div class="quick-action-icon" style="background:rgba(26,58,107,0.1);color:var(--primary);"><i class="fas fa-calendar-alt"></i></div>
+              <div class="quick-action-label">View Timetable</div>
+            </div>
+            <div class="quick-action" onclick="goto('results')">
+              <div class="quick-action-icon" style="background:rgba(22,163,74,0.1);color:var(--success);"><i class="fas fa-star"></i></div>
+              <div class="quick-action-label">My Grades</div>
+            </div>
+            <div class="quick-action" onclick="goto('attendance')">
+              <div class="quick-action-icon" style="background:rgba(8,145,178,0.1);color:var(--info);"><i class="fas fa-clipboard-check"></i></div>
+              <div class="quick-action-label">Attendance</div>
+            </div>
+            <div class="quick-action" onclick="goto('fees')">
+              <div class="quick-action-icon" style="background:rgba(232,160,32,0.12);color:#92630a;"><i class="fas fa-money-check-alt"></i></div>
+              <div class="quick-action-label">Pay Fees</div>
+            </div>
+            <div class="quick-action" onclick="goto('announcements')">
+              <div class="quick-action-icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;"><i class="fas fa-bullhorn"></i></div>
+              <div class="quick-action-label">Announcements</div>
+            </div>
+            <div class="quick-action" onclick="goto('profile')">
+              <div class="quick-action-icon" style="background:rgba(16,185,129,0.1);color:#059669;"><i class="fas fa-user"></i></div>
+              <div class="quick-action-label">Profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Courses Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Current Semester Courses</div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Lecturer</th>
+                  <th>Credits</th>
+                  <th>Grade</th>
+                  <th>Attendance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ACCT101 - Financial Accounting I</td>
+                  <td>Dr. Rakotomalala</td>
+                  <td>4</td>
+                  <td><span class="badge badge-blue">B (80)</span></td>
+                  <td><span class="badge badge-green">96%</span></td>
+                </tr>
+                <tr>
+                  <td>MATH101 - Business Mathematics</td>
+                  <td>Prof. Andriamahefa</td>
+                  <td>3</td>
+                  <td><span class="badge badge-green">A (89)</span></td>
+                  <td><span class="badge badge-green">93%</span></td>
+                </tr>
+                <!-- Add more courses -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TIMETABLE ==================== -->
+    <div class="page-content" id="page-timetable">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Timetable</div>
+          <div class="page-subtitle">Semester 2, 2024–2025 · L1 Accounting</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="showToast('Timetable printed!')">
+            <i class="fas fa-print"></i> Print
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Weekly Schedule · Group A</div>
+          <div class="text-sm text-muted">Week of May 25, 2025</div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div class="timetable-grid">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:100px;">Time</th>
+                  <th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="background:var(--bg);">08:00–10:00</td>
+                  <td><div class="timetable-subject blue">ACCT101<br/>Dr. Rakotomalala<br/>A1</div></td>
+                  <td><div class="timetable-subject gold">MATH101<br/>Prof. Andriamahefa<br/>B2</div></td>
+                  <td></td>
+                  <td><div class="timetable-subject teal">ECON101<br/>Dr. Razafy<br/>A3</div></td>
+                  <td><div class="timetable-subject green">COMM101<br/>Ms. Rasolofoniaina<br/>C1</div></td>
+                </tr>
+                <!-- Simplified version of full timetable from index.html -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== RESULTS & GRADES ==================== -->
+    <div class="page-content" id="page-results">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Results & Grades</div>
+          <div class="page-subtitle">Semester 2, 2024-2025 performance</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Current Semester GPA: <span class="fw-700 text-primary">3.42</span></div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Course</th><th>Lecturer</th><th>Midterm</th><th>Final</th><th>Avg</th><th>Grade</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>ACCT101</td><td>Dr. Rakotomalala</td><td>78</td><td>82</td><td><strong>80</strong></td><td><span class="badge badge-blue">B</span></td><td>Published</td></tr>
+                <tr><td>MATH101</td><td>Prof. Andriamahefa</td><td>90</td><td>88</td><td><strong>89</strong></td><td><span class="badge badge-green">A</span></td><td>Published</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MY ATTENDANCE ==================== -->
+    <div class="page-content" id="page-attendance">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Attendance</div>
+          <div class="page-subtitle">Semester attendance summary</div>
+        </div>
+      </div>
+      <div class="stats-grid mb-18">
+        <div class="stat-card green"><div class="stat-card-value">92%</div><div class="stat-card-label">Overall Rate</div></div>
+        <div class="stat-card blue"><div class="stat-card-value">156/170</div><div class="stat-card-label">Present</div></div>
+        <div class="stat-card gold"><div class="stat-card-value">14</div><div class="stat-card-label">Absent</div></div>
+      </div>
+      <!-- Course attendance table -->
+    </div>
+
+    <!-- ==================== FEEDBACK & EVALUATION ==================== -->
+    <div class="page-content" id="page-feedback">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Feedback & Evaluation</div>
+          <div class="page-subtitle">Instructor feedback and course evaluations</div>
+        </div>
+        <div class="page-actions">
+          <span style="font-size:0.82rem;color:var(--text-muted);">Semester 2, 2024–2025</span>
+        </div>
+      </div>
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Feedback</div>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-icon-wrap" style="background:rgba(26,58,107,0.1);color:var(--primary);">
+                <i class="fas fa-star"></i>
+              </div>
+              <div>
+                <div class="activity-text">ACCT101 - "Excellent participation, consistent performance"</div>
+                <div class="activity-time">Dr. Rakotomalala · May 20</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon-wrap" style="background:rgba(8,145,178,0.1);color:var(--info);">
+                <i class="fas fa-comment"></i>
+              </div>
+              <div>
+                <div class="activity-text">MATH101 - "Improve problem-solving speed in exams"</div>
+                <div class="activity-time">Prof. Andriamahefa · May 18</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Course Evaluations</div>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+              <div>
+                <div class="fw-600 mb-8">Overall Rating</div>
+                <div style="font-size:2.2rem;font-weight:700;color:var(--primary);">4.3/5</div>
+                <div class="text-sm text-muted">Average across 5 courses</div>
+              </div>
+              <div>
+                <div class="fw-600 mb-8">My Rating Trend</div>
+                <canvas id="feedbackChart" height="80" style="height:100px;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Detailed Feedback History</div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Course</th>
+                  <th>Instructor</th>
+                  <th>Rating</th>
+                  <th>Comments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>May 20</td>
+                  <td>ACCT101</td>
+                  <td>Dr. Rakotomalala</td>
+                  <td><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></td>
+                  <td>"Excellent participation..."</td>
+                </tr>
+                <tr>
+                  <td>May 18</td>
+                  <td>MATH101</td>
+                  <td>Prof. Andriamahefa</td>
+                  <td><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></td>
+                  <td>"Improve problem-solving..."</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SUPPORT/HELPDESK ==================== -->
+    <div class="page-content" id="page-support">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Support / Helpdesk</div>
+          <div class="page-subtitle">My support tickets and help resources</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="openModal('newTicketModal')">
+            <i class="fas fa-plus"></i> New Ticket
+          </button>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" data-tab-group="support" data-tab="open">Open (2)</div>
+        <div class="tab" data-tab-group="support" data-tab="in-progress">In Progress (1)</div>
+        <div class="tab" data-tab-group="support" data-tab="closed">Closed (8)</div>
+      </div>
+      <div data-tab-content="support" data-content="open">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Open Tickets</div>
+            <div class="header-search" style="max-width:280px;">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search my tickets...">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="support-ticket">
+              <div class="flex-between">
+                <div class="flex-center gap-12">
+                  <div class="w-10 h-10 bg-blue-100 rounded-full flex-center fw-700 text-blue-600 text-sm">#001</div>
+                  <div>
+                    <div class="fw-600">#001 Course registration issue</div>
+                    <div class="text-sm text-muted">Opened 3 days ago · Academic Office</div>
+                  </div>
+                </div>
+                <span class="badge badge-red">Waiting Reply</span>
+              </div>
+            </div>
+            <div class="support-ticket">
+              <div class="flex-between">
+                <div class="flex-center gap-12">
+                  <div class="w-10 h-10 bg-orange-100 rounded-full flex-center fw-700 text-orange-600 text-sm">#002</div>
+                  <div>
+                    <div class="fw-600">#002 Fee payment not reflecting</div>
+                    <div class="text-sm text-muted">Opened yesterday · Finance Office</div>
+                  </div>
+                </div>
+                <span class="badge badge-gold">In Review</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-tab-content="support" data-content="in-progress" class="hidden">
+        <div class="card">
+          <div class="card-body">
+            <div class="empty-state">
+              <i class="fas fa-tasks"></i>
+              <p>No tickets in progress</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-tab-content="support" data-content="closed" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Closed Tickets (8)</div>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-icon-wrap" style="background:rgba(22,163,74,0.1);color:var(--success);">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div>
+                <div class="activity-text">#007 Transcript request</div>
+                <div class="activity-time">Closed 2 days ago ✓</div>
+              </div>
+            </div>
+            <!-- more closed tickets -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MY PROFILE ==================== -->
+    <div class="page-content" id="page-profile">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Profile</div>
+          <div class="page-subtitle">STU-2025-001 · Semester 2, 2024–2025</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="App.showToast('Profile updated!')">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Header -->
+      <div class="card mb-18">
+        <div class="card-body text-center" style="position:relative;">
+          <div class="profile-avatar-wrap" style="position:absolute;top:-40px;left:50%;transform:translateX(-50%); margin-top: 60px;">
+            <div class="profile-avatar-inner avatar-lg" >RM</div>
+          </div>
+          <div style="padding-top:50px; margin-top: 30px;">
+            <h1 class="mb-4" style="font-size:2rem;font-weight:700;margin-bottom:4px;">Razafindrakoto Miora</h1>
+            <div class="text-muted mb-12" style="font-size:1.1rem;">STU-2025-001 · L1 Accounting</div>
+            <div class="flex-center gap-16" style="margin-top: 20px; gap: 30px;">
+              <div class="text-center">
+                <div class="fw-700 text-2xl text-primary mb-2" id="profile-gpa">3.42</div>
+                <div class="text-muted">Current GPA</div>
+              </div>
+              <div class="text-center">
+                <div class="fw-700 text-2xl text-success mb-2" id="profile-credits">15</div>
+                <div class="text-muted">Credits Earned</div>
+              </div>
+              <div class="text-center">
+                <div class="fw-700 text-2xl text-info mb-2" id="profile-attendance">92%</div>
+                <div class="text-muted">Attendance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Academic Summary -->
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Current Courses</div>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table id="profile-courses-table">
+                <thead>
+                  <tr>
+                    <th>Course</th>
+                    <th>Lecturer</th>
+                    <th>Credits</th>
+                    <th>Grade</th>
+                    <th>Attendance</th>
+                  </tr>
+                </thead>
+                <tbody style=" text-align: center; flex-direction: column;">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Fees Status</div>
+          </div>
+          <div class="card-body">
+            <div class="flex-center" style="gap:24px;margin-bottom:20px;">
+              <div style="text-align:center;">
+                <div class="fw-700 text-2xl text-success mb-2" id="profile-fees-paid">1,200,000</div>
+                <div class="text-sm text-muted">Paid (MGA)</div>
+              </div>
+              <div style="text-align:center;">
+                <div class="fw-700 text-2xl text-danger mb-2" id="profile-fees-balance">0</div>
+                <div class="text-sm text-muted">Balance Due</div>
+              </div>
+            </div>
+            <div class="progress mb-12">
+              <div class="progress-bar" style="width:100%;background:var(--success);" id="profile-fees-progress"></div>
+            </div>
+            <div class="text-center">
+              <span class="badge badge-success" id="profile-fees-status">All fees current ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Contact Information</div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Student ID</label>
+              <input type="text" class="form-input" id="profile-student-id" value="STU-2025-001" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <input type="text" class="form-input" id="profile-department" value="Accounting" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Level</label>
+              <input type="text" class="form-input" id="profile-level" value="L1" readonly>
+            </div>
+            <div class="form-group" class="form-full">
+              <label class="form-label">Emergency Contact</label>
+              <input type="text" class="form-input" id="profile-emergency-contact" value="+261 34 12 345 67" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SETTINGS ==================== -->
+    <div class="page-content" id="page-settings">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Settings</div>
+          <div class="page-subtitle">Manage your account preferences</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="App.showToast('Settings saved!')">
+            <i class="fas fa-save"></i> Save All Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Tabs -->
+      <div class="tabs mb-18">
+        <div class="tab active" data-tab-group="settings" data-tab="account">Account Security</div>
+        <div class="tab" data-tab-group="settings" data-tab="appearance">Appearance</div>
+        <div class="tab" data-tab-group="settings" data-tab="notifications">Notifications</div>
+        <div class="tab" data-tab-group="settings" data-tab="privacy">Privacy</div>
+      </div>
+
+      <!-- Account Security -->
+      <div data-tab-content="settings" data-content="account" class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">Manage Account Security</div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-input" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-input" placeholder="Enter new password (min 8 chars)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" class="form-input" placeholder="Confirm new password">
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">
+                <input type="checkbox" id="enable-2fa"> Enable Two-Factor Authentication
+              </label>
+              <div class="form-hint text-muted mt-4">
+                <i class="fas fa-info-circle"></i> Scan QR code with Google Authenticator or Authy app
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance (Hidden by default) -->
+      <div data-tab-content="settings" data-content="appearance" class="card mb-18 hidden">
+        <div class="card-header">
+          <div class="card-title">Theme & Language</div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Theme</label>
+              <div class="flex-center gap-12 mt-8">
+                <label class="flex-center gap-4 p-12 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="radio" name="theme" value="light" checked class="hidden">
+                  <i class="fas fa-sun text-2xl text-warning"></i>
+                  <span>Light</span>
+                </label>
+                <label class="flex-center gap-4 p-12 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="radio" name="theme" value="dark" class="hidden">
+                  <i class="fas fa-moon text-2xl text-purple-600"></i>
+                  <span>Dark</span>
+                </label>
+                <label class="flex-center gap-4 p-12 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input type="radio" name="theme" value="auto" class="hidden">
+                  <i class="fas fa-sync-alt text-2xl text-blue-600"></i>
+                  <span>System</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Language</label>
+              <select class="form-select" style="margin-top:12px;">
+                <option>English</option>
+                <option>Français</option>
+                <option>Malagasy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div data-tab-content="settings" data-content="notifications" class="card mb-18 hidden">
+        <div class="card-header">
+          <div class="card-title">Notification Preferences</div>
+        </div>
+        <div class="card-body">
+          <div class="p-16 border-b border-gray-100 mb-12">
+            <div class="flex-between">
+              <div>
+                <div class="fw-600">Email Notifications</div>
+                <div class="text-sm text-muted">Grade updates, fee reminders, announcements</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="p-16 border-b border-gray-100 mb-12">
+            <div class="flex-between">
+              <div>
+                <div class="fw-600">Push Notifications</div>
+                <div class="text-sm text-muted">Class reminders, attendance updates</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="p-16">
+            <div class="flex-between">
+              <div>
+                <div class="fw-600">SMS Alerts</div>
+                <div class="text-sm text-muted">Critical: fees due, exam schedules</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div data-tab-content="settings" data-content="privacy" class="card mb-18 hidden">
+        <div class="card-header">
+          <div class="card-title">Privacy Settings</div>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label class="form-label">
+                <input type="checkbox" checked> Allow profile visibility to lecturers
+              </label>
+              <div class="form-hint">Your grades and attendance visible to course instructors</div>
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">
+                <input type="checkbox"> Share contact info with classmates
+              </label>
+              <div class="form-hint">Phone/email visible in class group directories</div>
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">
+                <input type="checkbox"> Participate in academic analytics
+              </label>
+              <div class="form-hint">Anonymous data used for institutional research</div>
+            </div>
+            <div class="form-group form-full">
+              <label class="form-label">
+                Download my data
+              </label>
+              <button class="btn btn-outline mt-8">
+                <i class="fas fa-download"></i> Download Profile Data (JSON)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== REPORTS ==================== -->
+    <div class="page-content" id="page-reports">
+
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Progress & Analytics</div>
+          <div class="page-subtitle">Personal academic performance overview</div>
+        </div>
+        <div class="page-actions">
+          <span style="font-size:0.82rem;color:var(--text-muted);">Semester 2, 2024–2025</span>
+          <button class="btn btn-primary" onclick="showToast('Report downloaded as PDF!')">
+            <i class="fas fa-download"></i> Download Report
+          </button>
+        </div>
+      </div>
+      <div class="stats-grid mb-18">
+        <div class="stat-card blue">
+          <div class="stat-card-icon"><i class="fas fa-chart-line-up"></i></div>
+          <div class="stat-card-value">3.42</div>
+          <div class="stat-card-label">Current GPA</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> +0.18 vs Semester 1</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-icon"><i class="fas fa-clipboard-check"></i></div>
+          <div class="stat-card-value">92%</div>
+          <div class="stat-card-label">Attendance</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> Target: 85%</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-card-icon"><i class="fas fa-star"></i></div>
+          <div class="stat-card-value">15/18</div>
+          <div class="stat-card-label">Credits Earned</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> On track</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-card-icon"><i class="fas fa-trophy"></i></div>
+          <div class="stat-card-value">Rank #12</div>
+          <div class="stat-card-label">Class Position</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> L1 Accounting</div>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">GPA Trends</div>
+            <div class="card-subtitle">Performance over semesters</div>
+          </div>
+          <div class="card-body">
+            <canvas id="gpaTrendChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Attendance Summary</div>
+            <div class="card-subtitle">Monthly breakdown</div>
+          </div>
+          <div class="card-body">
+            <canvas id="attendanceTrendChart" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-18">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Semester Comparison</div>
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+              <div>
+                <div class="text-center mb-16">
+                  <div class="fw-700 text-2xl text-primary mb-2">Semester 1</div>
+                  <div style="font-size:2.4rem;font-weight:700;color:var(--success);">3.24</div>
+                  <div class="text-sm text-muted">GPA</div>
+                </div>
+                <div class="progress mb-12"><div class="progress-bar" style="width:85%;background:var(--success);"></div></div>
+              </div>
+              <div>
+                <div class="text-center mb-16">
+                  <div class="fw-700 text-2xl text-primary mb-2">Semester 2</div>
+                  <div style="font-size:2.4rem;font-weight:700;color:var(--primary);">3.42</div>
+                  <div class="text-sm text-muted">GPA</div>
+                </div>
+                <div class="progress"><div class="progress-bar" style="width:92%;background:var(--primary);"></div></div>
+              </div>
+            </div>
+            <div class="text-center mt-12">
+              <span class="text-sm text-muted">+0.18 improvement</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Performance Highlights</div>
+          </div>
+          <div class="card-body">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--success);"></div>
+              <div>
+                <div class="activity-text fw-600">Top 15% Attendance</div>
+                <div class="text-sm text-success">92% vs department avg 84%</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--primary);"></div>
+              <div>
+                <div class="activity-text fw-600">GPA Rank #12</div>
+                <div class="text-sm text-primary">Out of 85 L1 Accounting students</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--accent);"></div>
+              <div>
+                <div class="activity-text fw-600">3 A grades</div>
+                <div class="text-sm text-accent">Excellent performance in MATH101, COMM101</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== REPORTS - MY PROGRESS & ANALYTICS ==================== -->
+    <div class="page-content" id="page-reports">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Progress & Analytics</div>
+          <div class="page-subtitle">Personal academic performance overview</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="showToast('Report generated!')">
+            <i class="fas fa-download"></i> Download PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid mb-24">
+        <div class="stat-card blue">
+          <div class="stat-card-icon"><i class="fas fa-chart-line"></i></div>
+          <div class="stat-card-value">3.42</div>
+          <div class="stat-card-label">Current GPA</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> +0.18 from last semester</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-card-value">92%</div>
+          <div class="stat-card-label">Attendance Rate</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> Department avg: 84%</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-card-icon"><i class="fas fa-layer-group"></i></div>
+          <div class="stat-card-value">15/18</div>
+          <div class="stat-card-label">Credits</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> On track for graduation</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-card-icon"><i class="fas fa-trophy"></i></div>
+          <div class="stat-card-value">#12</div>
+          <div class="stat-card-label">Class Rank</div>
+          <div class="stat-card-change up"><i class="fas fa-arrow-up"></i> L1 Accounting (85 students)</div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">GPA Trends</div>
+            <div class="card-subtitle">Performance across semesters</div>
+          </div>
+          <div class="card-body">
+            <canvas id="gpaChart" height="240"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Attendance Trends</div>
+            <div class="card-subtitle">Monthly attendance summary</div>
+          </div>
+          <div class="card-body">
+            <canvas id="attendanceChart" height="240"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semester Comparison -->
+      <div class="card mb-24">
+        <div class="card-header">
+          <div class="card-title">Semester Comparison</div>
+        </div>
+        <div class="card-body">
+          <div class="grid-2 gap-24">
+            <div class="text-center">
+              <div class="fw-700 text-2xl mb-4 text-success">Semester 1</div>
+              <div style="font-size:3rem;font-weight:700;color:var(--success);line-height:1;">3.24</div>
+              <div class="text-muted mt-8">8 courses • 84% attendance</div>
+              <div class="progress mt-12"><div class="progress-bar" style="width:82%;background:var(--success);"></div></div>
+            </div>
+            <div class="text-center">
+              <div class="fw-700 text-2xl mb-4 text-primary">Semester 2 (Current)</div>
+              <div style="font-size:3rem;font-weight:700;color:var(--primary);line-height:1;">3.42</div>
+              <div class="text-muted mt-8">5 courses • 92% attendance</div>
+              <div class="progress mt-12"><div class="progress-bar" style="width:92%;background:var(--primary);"></div></div>
+            </div>
+          </div>
+          <div class="text-center mt-20">
+            <span class="text-xl fw-600 text-success">+0.18 GPA Improvement</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Highlights -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Key Performance Highlights</div>
+        </div>
+        <div class="card-body">
+          <div class="grid-3 gap-16">
+            <div class="text-center">
+              <div class="fw-600 text-primary mb-4">📈 GPA Progress</div>
+              <div class="text-2xl fw-700 text-success mb-2">+18%</div>
+              <div class="text-xs text-muted">vs previous semester</div>
+            </div>
+            <div class="text-center">
+              <div class="fw-600 text-primary mb-4">🏆 Class Rank</div>
+              <div class="text-2xl fw-700 text-accent mb-2">#12/85</div>
+              <div class="text-xs text-muted">L1 Accounting</div>
+            </div>
+            <div class="text-center">
+              <div class="fw-600 text-primary mb-4">⭐ Top Courses</div>
+              <div class="text-2xl fw-700 text-purple mb-2">3 A's</div>
+              <div class="text-xs text-muted">MATH101, COMM101, ECON101</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add other student pages here (results, fees, etc.) -->
+    <!-- ... -->
+
+  </div>
+</div>
+
+</body>
+</html>
